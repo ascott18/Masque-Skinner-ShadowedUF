@@ -5,14 +5,10 @@ if not (LBF or LMB) then return end
 local addonName = ...
 local f = CreateFrame("Frame")
 local parents = {}
-local buttons = {}
 local skinned = {}
 local isSet, db
 local pairs, wipe =
 	  pairs, wipe
-local ratio = 38/36	  
-local function noop()
-end
 
 local function SetVertexColor(border, r, g, b, a)
 	if r == .6 and g == .6 and b == .6 then
@@ -102,13 +98,14 @@ function ShadowUF.modules.auras:Update(...)
 	oldUpdate(self, ...)
 	local frame = ...
 	
+	local groupname = ShadowUF.L.units[frame.unitType]
 	if not LMB then
-		local groupname = ShadowUF.L.units[frame.unitType]
 		local v = db[groupName]
 		if v then
 			LBF:Group("ShadowedUF", groupname):Skin(v.S,v.G,v.B,v.C)
 		end
 	end
+	LBF:Group("ShadowedUF", groupname):ReSkin()
 end
 
 f:RegisterEvent("ADDON_LOADED")
