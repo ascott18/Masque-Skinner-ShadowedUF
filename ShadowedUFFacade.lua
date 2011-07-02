@@ -16,13 +16,7 @@ local function SetVertexColor(border, r, g, b, a)
 	else
 		a = 1
 	end
---	local normaltex = border.button.__MSQ_NormalTexture
---	if normaltex then
---		border.button:SetVertexColor(r, g, b, 1)
-	--	border:setvertexcolor(r, g, b, 0)
---	else
-		border:setvertexcolor(r, g, b, a)
---	end
+	border:setvertexcolor(r, g, b, a)
 end
 local function onupdate()
 	for frame, buttons in pairs(parents) do
@@ -36,7 +30,7 @@ local function onupdate()
 				border.setvertexcolor = border.SetVertexColor
 				border.SetVertexColor = SetVertexColor
 				local r, g, b = border:GetVertexColor()
-				border:SetVertexColor(floor(r*100+0.5)/100, floor(g*100+0.5)/100, floor(b*100+0.5)/100)
+				border:SetVertexColor(floor(r*100+0.5)/100, floor(g*100+0.5)/100, floor(b*100+0.5)/100) -- round it, because ugly numbers come out of GetVertexColor
 				
 				group:AddButton(button, {
 					Icon = button.icon,
@@ -55,32 +49,6 @@ local function onupdate()
 end
 
 
-local function OnEvent(self, event, addon)
-	if event == "ADDON_LOADED" and addon == addonName then
-		ShadowedUFFacade = ShadowedUFFacade or {}
-		db = ShadowedUFFacade
-		if not LMB then
-			LBF:RegisterSkinCallback("ShadowedUF",
-				function(_, SkinID, Gloss, Backdrop, Group, _, Colors)
-					if not (db and SkinID) then return end
-					if Group then
-						local gs = db[Group] or {}
-						db[Group] = gs
-						gs.S = SkinID
-						gs.G = Gloss
-						gs.B = Backdrop
-						gs.C = Colors
-					end
-				end
-			)
-		end
-	elseif event == "PLAYER_ENTERING_WORLD" then
-		for k, v in pairs(db) do
-			LBF:Group("ShadowedUF", k):Skin(v.S,v.G,v.B,v.C)
-		end
-	end
-end
-
 hooksecurefunc("CreateFrame",
     function(_, _, parent)
         if parent and parent.buttons and parent.type and parent.totalAuras then -- make sure the parent is a SUF frame and not something else
@@ -94,13 +62,12 @@ hooksecurefunc("CreateFrame",
 )
 
 local oldUpdate = ShadowUF.modules.auras.Update
-function ShadowUF.modules.auras:Update(...)
-	oldUpdate(self, ...)
-	local frame = ...
+function ShadowUF.modules.auras:Update(frame, ...) -- sorry about the raw hook, shadowed...
+	oldUpdate(self, frame, ...)
 	
 	local groupname = ShadowUF.L.units[frame.unitType]
 	if not LMB then
-		local v = db[groupName]
+		local v = ShadowedUFFacade[groupName]
 		if v then
 			LBF:Group("ShadowedUF", groupname):Skin(v.S,v.G,v.B,v.C)
 		end
@@ -108,9 +75,30 @@ function ShadowUF.modules.auras:Update(...)
 	LBF:Group("ShadowedUF", groupname):ReSkin()
 end
 
-f:RegisterEvent("ADDON_LOADED")
 if not LMB then
+	local function OnEvent(self, event, addon)
+		ShadowedUFFacade = ShadowedUFFacade or {}
+		db = ShadowedUFFacade
+		LBF:RegisterSkinCallback("ShadowedUF",
+			function(_, SkinID, Gloss, Backdrop, Group, _, Colors)
+				if not (db and SkinID) then return end
+				if Group then
+					local gs = db[Group] or {}
+					db[Group] = gs
+					gs.S = SkinID
+					gs.G = Gloss
+					gs.B = Backdrop
+					gs.C = Colors
+				end
+			end
+		)
+		for k, v in pairs(db) do
+			LBF:Group("ShadowedUF", k):Skin(v.S,v.G,v.B,v.C)
+		end
+		f:SetScript("OnEvent", nil)
+	end
+
 	f:RegisterEvent("PLAYER_ENTERING_WORLD")
+	f:SetScript("OnEvent", OnEvent)
 end
-f:SetScript("OnEvent", OnEvent)
 

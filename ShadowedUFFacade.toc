@@ -1,6 +1,6 @@
-﻿## Interface: 40100
+﻿## Interface: 40200
 ## Title: ShadowedUF Facade
-## Version: 1
+## Version: 1.1
 ## Author: Cybeloras of Mal'Ganis
 ## Notes: Skins ShadowedUnitFrames' aura frames with ButtonFacade
 ## RequiredDeps: ShadowedUnitFrames
