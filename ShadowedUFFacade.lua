@@ -1,6 +1,6 @@
 ﻿
 local LBF = LibStub("LibButtonFacade", true)
-local LMB = LibMasque and LibMasque("Button")
+local LMB = LibStub("Masque", true) or (LibMasque and LibMasque("Button"))
 if not (LBF or LMB) then return end
 local addonName = ...
 local f = CreateFrame("Frame")
@@ -62,7 +62,7 @@ hooksecurefunc("CreateFrame",
 )
 
 local oldUpdate = ShadowUF.modules.auras.Update
-function ShadowUF.modules.auras:Update(frame, ...) -- sorry about the raw hook, shadowed...
+function ShadowUF.modules.auras:Update(frame, ...) -- sorry about the raw hook...
 	oldUpdate(self, frame, ...)
 	
 	local groupname = ShadowUF.L.units[frame.unitType]
