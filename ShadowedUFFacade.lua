@@ -63,10 +63,7 @@ hooksecurefunc("CreateFrame",
     end
 )
 
-local oldUpdate = ShadowUF.modules.auras.Update
-function ShadowUF.modules.auras:Update(frame, ...) -- sorry about the raw hook...
-	oldUpdate(self, frame, ...)
-	
+hooksecurefunc(ShadowUF.modules.auras, "Update", function(self, frame)
 	local groupname = ShadowUF.L.units[frame.unitType]
 	if not LMB then
 		local v = ShadowedUFFacade[groupName]
@@ -75,7 +72,9 @@ function ShadowUF.modules.auras:Update(frame, ...) -- sorry about the raw hook..
 		end
 	end
 	Stub:Group("ShadowedUF", groupname):ReSkin()
-end
+end)
+
+
 
 if not LMB then
 	local function OnEvent(self, event, addon)
