@@ -4,11 +4,10 @@ local LMB = LibStub("Masque", true) or (LibMasque and LibMasque("Button"))
 local Stub = (LBF or LMB)
 if not Stub then return end
 
-local addonName = ...
 local f = CreateFrame("Frame")
 local parents = {}
 local skinned = {}
-local isSet, db
+local isSet
 local pairs, wipe =
 	  pairs, wipe
 
@@ -65,13 +64,14 @@ hooksecurefunc("CreateFrame",
 
 hooksecurefunc(ShadowUF.modules.auras, "Update", function(self, frame)
 	local groupname = ShadowUF.L.units[frame.unitType]
+	local group = Stub:Group("ShadowedUF", groupname)
 	if not LMB then
 		local v = ShadowedUFFacade[groupName]
 		if v then
-			Stub:Group("ShadowedUF", groupname):Skin(v.S,v.G,v.B,v.C)
+			group:Skin(v.S,v.G,v.B,v.C)
 		end
 	end
-	Stub:Group("ShadowedUF", groupname):ReSkin()
+	group:ReSkin()
 end)
 
 
@@ -79,7 +79,7 @@ end)
 if not LMB then
 	local function OnEvent(self, event, addon)
 		ShadowedUFFacade = ShadowedUFFacade or {}
-		db = ShadowedUFFacade
+		local db = ShadowedUFFacade
 		Stub:RegisterSkinCallback("ShadowedUF",
 			function(_, SkinID, Gloss, Backdrop, Group, _, Colors)
 				if not (db and SkinID) then return end
