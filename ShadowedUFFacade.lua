@@ -62,9 +62,15 @@ hooksecurefunc("CreateFrame",
     end
 )
 
-hooksecurefunc(ShadowUF.modules.auras, "Update", function(self, frame)
+
+local oldUpdate = ShadowUF.modules.auras.Update
+function ShadowUF.modules.auras:Update(frame, ...)
+	-- raw hook is used here because if we securehook then we get   movers.lua:247: "setfenv" cannot change environment of given object
+	oldUpdate(self, frame, ...)
+	
 	local groupname = ShadowUF.L.units[frame.unitType]
 	local group = Stub:Group("ShadowedUF", groupname)
+	
 	if not LMB then
 		local v = ShadowedUFFacade[groupName]
 		if v then
@@ -72,8 +78,7 @@ hooksecurefunc(ShadowUF.modules.auras, "Update", function(self, frame)
 		end
 	end
 	group:ReSkin()
-end)
-
+end
 
 
 if not LMB then
