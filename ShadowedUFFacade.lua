@@ -1,8 +1,6 @@
 ﻿
-local LBF = LibStub("LibButtonFacade", true)
 local LMB = LibStub("Masque", true) or (LibMasque and LibMasque("Button"))
-local Stub = (LBF or LMB)
-if not Stub then return end
+if not LMB then return end
 
 local f = CreateFrame("Frame")
 local parents = {}
@@ -22,7 +20,7 @@ end
 local function onupdate()
 	for frame, buttons in pairs(parents) do
 		local groupName = ShadowUF.L.units[frame.parent.unitType]
-		local group = Stub:Group("ShadowedUF", groupName)
+		local group = LMB:Group("ShadowedUF", groupName)
 		for _, button in pairs(buttons) do
 			if not skinned[button] then
 				local border = button.border
@@ -69,42 +67,8 @@ function ShadowUF.modules.auras:Update(frame, ...)
 	oldUpdate(self, frame, ...)
 	
 	local groupname = ShadowUF.L.units[frame.unitType]
-	local group = Stub:Group("ShadowedUF", groupname)
+	local group = LMB:Group("ShadowedUF", groupname)
 	
-	if not LMB then
-		local v = ShadowedUFFacade[groupName]
-		if v then
-			group:Skin(v.S,v.G,v.B,v.C)
-		end
-	end
 	group:ReSkin()
-end
-
-
-if not LMB then
-	local function OnEvent(self, event, addon)
-		ShadowedUFFacade = ShadowedUFFacade or {}
-		local db = ShadowedUFFacade
-		Stub:RegisterSkinCallback("ShadowedUF",
-			function(_, SkinID, Gloss, Backdrop, Group, _, Colors)
-				if not (db and SkinID) then return end
-				if Group then
-					local gs = db[Group] or {}
-					db[Group] = gs
-					gs.S = SkinID
-					gs.G = Gloss
-					gs.B = Backdrop
-					gs.C = Colors
-				end
-			end
-		)
-		for k, v in pairs(db) do
-			Stub:Group("ShadowedUF", k):Skin(v.S,v.G,v.B,v.C)
-		end
-		f:SetScript("OnEvent", nil)
-	end
-
-	f:RegisterEvent("PLAYER_ENTERING_WORLD")
-	f:SetScript("OnEvent", OnEvent)
 end
 

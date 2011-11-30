@@ -1,11 +1,9 @@
-﻿## Interface: 40200
-## Title: ShadowedUF Facade
-## Version: 1.3.3
+﻿## Interface: 40300
+## Title: Masque Skinner: ShadowedUF
+## Version: 1.4.0
 ## Author: Cybeloras of Mal'Ganis
-## Notes: Skins ShadowedUnitFrames' aura frames with ButtonFacade
-## RequiredDeps: ShadowedUnitFrames
-## OptionalDeps: ButtonFacade, Masque
-## SavedVariablesPerCharacter: ShadowedUFFacade
+## Notes: Skins ShadowedUnitFrames' aura frames with Masque
+## RequiredDeps: ShadowedUnitFrames, Masque
 ## X-Child-Of: ShadowedUnitFrames
 
 ShadowedUFFacade.lua
