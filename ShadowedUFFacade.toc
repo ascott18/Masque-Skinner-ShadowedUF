@@ -1,6 +1,7 @@
-﻿## Interface: 50001
+﻿## Interface: 60000
+## X-Compatible-With: 50400
 ## Title: Masque Skinner: ShadowedUF
-## Version: 1.5.0
+## Version: 1.5.2
 ## Author: Cybeloras of Detheroc/Mal'Ganis
 ## Notes: Skins ShadowedUnitFrames' aura frames with Masque
 ## RequiredDeps: ShadowedUnitFrames, Masque
